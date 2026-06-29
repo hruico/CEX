@@ -25,6 +25,8 @@ app.post("/signup", (req, res) => {
   // 2. hash password (bcrypt/argon2)
   // 3. push to USERS
   // 4. init BALANCES[userId] with INR: { available: 0, locked: 0 }
+
+  
 });
 
 app.post("/login", (req, res) => {

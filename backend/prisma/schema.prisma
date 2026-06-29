@@ -12,16 +12,57 @@ datasource db {
   provider = "postgresql"
 }
 
-model User{
+model User {
+  id       Int    @id @default(autoincrement())
+  username String @unique
+  email    String @unique
+  password String
+  // No orders field here!
+  orders Order[]
 
 }
 
+model Stock {
+  id Int @id @default(autoincrement())
+  name String @unique
+  Symbol String @unique
+  // No orders field here!
+  orders Order[]
+  fills Fill[]
+}
+
 model Order {
+  id      Int   @id @default(autoincrement())
+  userId  Int
+  stockId Int
+  qty Int
+  type String 
+  side String
+  price Int
+  filledQty Int @default(0)
+  status String
+  buyFills Fill[] @relation("BuyOrderFills")
+  sellFills Fill[] @relation("SellOrderFills")
+  
+  user User @relation(fields: [userId],references: [id])
+  stock Stock @relation(fields: [stockId],references: [id])
+
 
 }
 
 model Fill{
+  id Int @id @default(autoincrement())
+  stockId Int
+  price Int
+  qty Int
+  buyOrderId Int
+  sellOrderId Int
+
+  stock Stock @relation(fields: [stockId],references: [id])
+  buyOrder Order @relation("BuyOrderFills",fields: [buyOrderId],references: [id])
+  sellOrder Order @relation("SellOrderFills",fields: [sellOrderId],references: [id])
+
+
 
 }
 
-model Stock {}
